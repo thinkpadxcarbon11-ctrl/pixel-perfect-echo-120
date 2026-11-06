@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import {
   Bell, Briefcase, CheckCircle2, Info, Loader2, Mail, MailX, ShieldCheck, Target, TrendingUp, Zap, CalendarDays, AlertCircle,
 } from "lucide-react";
@@ -40,6 +40,7 @@ function Index() {
   const [error, setError] = useState("");
   const [lastSubStatus, setLastSubStatus] = useState<"subscribed" | "already_subscribed">("subscribed");
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const unsubscribePending = useRef(false);
 
   async function handleSubscribe(e: FormEvent) {
     e.preventDefault();
@@ -67,11 +68,18 @@ function Index() {
   }
 
   async function handleUnsubscribe() {
-    if (state === "unsubscribing") return;
+    console.debug("[Unsubscribe] handleUnsubscribe executed");
+    if (unsubscribePending.current) return;
+    if (!subscriber.name || !subscriber.email || !subscriber.job_type) {
+      setError("Your subscriber details are missing. Please subscribe before unsubscribing.");
+      return;
+    }
+    unsubscribePending.current = true;
     setConfirmOpen(false);
     setError("");
     setState("unsubscribing");
     try {
+      console.debug("[Unsubscribe] Requesting cancellation for stored subscriber");
       const r = await call({ data: { action: "unsubscribe", ...subscriber } as never });
       if (r.success && r.status === "unsubscribed") {
         setMessage(r.message || "You have successfully unsubscribed.");
@@ -83,6 +91,8 @@ function Index() {
     } catch {
       setError("We couldn't unsubscribe you. Please try again.");
       setState(lastSubStatus);
+    } finally {
+      unsubscribePending.current = false;
     }
   }
 
@@ -165,7 +175,10 @@ function Index() {
                 ))}
               </dl>
               {error && <p role="alert" className="mt-4 text-sm text-destructive">{error}</p>}
-              <Button variant="outline" className="mt-6 rounded-xl" disabled={state === "unsubscribing"} onClick={() => setConfirmOpen(true)}>
+              <Button variant="outline" className="mt-6 rounded-xl" disabled={state === "unsubscribing"} onClick={() => {
+                console.debug("[Unsubscribe] Unsubscribe button clicked");
+                setConfirmOpen(true);
+              }}>
                 {state === "unsubscribing" ? <><Loader2 className="animate-spin" /> Unsubscribing…</> : <><MailX /> Unsubscribe</>}
               </Button>
             </div>
@@ -210,6 +223,21 @@ function Index() {
           <p className="mt-2 text-xs text-muted-foreground">© 2026 Job Letter. All rights reserved.</p>
         </div>
       </footer>
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unsubscribe from Job Letter?</AlertDialogTitle>
+            <AlertDialogDescription>You will no longer receive job updates at {subscriber.email}.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction disabled={state === "unsubscribing"} onClick={() => {
+              console.debug("[Unsubscribe] Confirmation button clicked");
+              void handleUnsubscribe();
+            }}>Yes, Unsubscribe</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
