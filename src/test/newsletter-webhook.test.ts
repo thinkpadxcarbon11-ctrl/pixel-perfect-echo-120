@@ -9,7 +9,7 @@ describe("Unsubscribe webhook", () => {
     const fetch = vi.fn().mockResolvedValue(new Response(JSON.stringify({ success: true, status: "unsubscribed", message: "Done" })));
     vi.stubGlobal("fetch", fetch);
     const result = await callNewsletterWebhook({ data });
-    expect(fetch).toHaveBeenCalledWith("https://n8n.hablu-programmer.com/webhook-test/job_newsletter2", {
+    expect(fetch).toHaveBeenCalledWith("https://n8n.hablu-programmer.com/webhook-test/job_unsubscribe", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: data.name, email: data.email, job_type: data.job_type }),
     });

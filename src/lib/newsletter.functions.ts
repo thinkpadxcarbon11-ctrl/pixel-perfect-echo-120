@@ -15,7 +15,7 @@ export const JOB_TYPES = [
 ] as const;
 
 const SUBSCRIBE_URL = "https://n8n.hablu-programmer.com/webhook-test/job_subscribe";
-const UNSUBSCRIBE_URL = "https://n8n.hablu-programmer.com/webhook-test/job_newsletter2";
+const UNSUBSCRIBE_URL = "https://n8n.hablu-programmer.com/webhook-test/job_unsubscribe";
 
 export const subscriberSchema = z.object({
   action: z.enum(["subscribe", "unsubscribe"]),
