@@ -14,7 +14,7 @@ export const JOB_TYPES = [
   "All Job Categories",
 ] as const;
 
-const SUBSCRIBE_URL = "https://n8n.hablu-programmer.com/webhook-test/job_subscribe";
+const SUBSCRIBE_URL = "https://n8n.hablu-programmer.com/webhook/job_subscribe";
 const UNSUBSCRIBE_URL = "https://n8n.hablu-programmer.com/webhook-test/job_unsubscribe";
 
 export const subscriberSchema = z.object({
