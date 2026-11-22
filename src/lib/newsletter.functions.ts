@@ -43,12 +43,20 @@ export const callNewsletterWebhook = createServerFn({ method: "POST" })
       });
       if (action === "unsubscribe") console.debug("[Unsubscribe] HTTP response status", res.status);
       const text = await res.text();
+      if (action === "unsubscribe" && !res.ok) {
+        return { success: false, status: "error", message: res.status === 404
+          ? "The unsubscribe webhook is not available. Please try again later."
+          : `The unsubscribe service could not complete the request (HTTP ${res.status}). Please try again.` };
+      }
       let json: unknown;
       try {
         json = JSON.parse(text);
       } catch {
         if (action === "unsubscribe") {
-          return { success: false, status: "error", message: `The unsubscribe service returned an invalid response (HTTP ${res.status}). Please try again.` };
+          const message = text.trim();
+          return message
+            ? { success: true, status: "unsubscribed", message }
+            : { success: false, status: "error", message: "The unsubscribe service returned an empty response. Please try again." };
         }
         console.error("n8n non-JSON response", res.status, text.slice(0, 300));
         return { success: false, status: "error", message: "We couldn't reach the server. Please try again." };
@@ -56,11 +64,6 @@ export const callNewsletterWebhook = createServerFn({ method: "POST" })
       const r = (Array.isArray(json) ? json[0] : json) as Partial<WebhookResult> | undefined;
       if (action === "unsubscribe") {
         console.debug("[Unsubscribe] Response", { success: r?.success === true, status: r?.status });
-        if (!res.ok) {
-          return { success: false, status: "error", message: res.status === 404
-            ? "The unsubscribe webhook is not available. Please try again later."
-            : `The unsubscribe service could not complete the request (HTTP ${res.status}). Please try again.` };
-        }
       }
       if (!r || typeof r.status !== "string") {
         return { success: false, status: "error", message: "Unexpected response. Please try again." };

@@ -19,4 +19,12 @@ describe("Unsubscribe webhook", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ success: true, status: "unsubscribed" }), { status: 500 })));
     expect((await callNewsletterWebhook({ data })).success).toBe(false);
   });
+  it("returns a successful plain-text unsubscribe confirmation for the interface", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("You are successfully unsubscribed.")));
+    expect(await callNewsletterWebhook({ data })).toEqual({
+      success: true,
+      status: "unsubscribed",
+      message: "You are successfully unsubscribed.",
+    });
+  });
 });
