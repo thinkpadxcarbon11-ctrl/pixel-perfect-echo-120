@@ -15,7 +15,7 @@ export const JOB_TYPES = [
 ] as const;
 
 const SUBSCRIBE_URL = "https://n8n.hablu-programmer.com/webhook/job_subscribe";
-const UNSUBSCRIBE_URL = "https://n8n.hablu-programmer.com/webhook-test/job_unsubscribe";
+const UNSUBSCRIBE_URL = "https://n8n.hablu-programmer.com/webhook/unsubscribe";
 
 export const subscriberSchema = z.object({
   action: z.enum(["subscribe", "unsubscribe"]),
@@ -58,7 +58,7 @@ export const callNewsletterWebhook = createServerFn({ method: "POST" })
         console.debug("[Unsubscribe] Response", { success: r?.success === true, status: r?.status });
         if (!res.ok) {
           return { success: false, status: "error", message: res.status === 404
-            ? "The unsubscribe webhook is not listening. Please start the n8n test workflow and try again."
+            ? "The unsubscribe webhook is not available. Please try again later."
             : `The unsubscribe service could not complete the request (HTTP ${res.status}). Please try again.` };
         }
       }
