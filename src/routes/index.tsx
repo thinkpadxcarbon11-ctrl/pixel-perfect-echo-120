@@ -82,7 +82,7 @@ function Index() {
       console.debug("[Unsubscribe] Requesting cancellation for stored subscriber");
       const r = await call({ data: { action: "unsubscribe", ...subscriber } as never });
       if (r.success && r.status === "unsubscribed") {
-        setMessage(r.message || "You have successfully unsubscribed.");
+        setMessage(r.message || "You are successfully unsubscribed.");
         setState("unsubscribed");
       } else {
         setError(r.message || "We couldn't unsubscribe you. Please try again.");
@@ -187,7 +187,7 @@ function Index() {
           {state === "unsubscribed" && (
             <div className="animate-rise text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-accent text-primary"><MailX className="h-8 w-8" /></div>
-              <h2 className="font-display text-2xl font-bold">Successfully Unsubscribed</h2>
+              <h2 className="font-display text-2xl font-bold">You are successfully unsubscribed</h2>
               <p className="mt-2 text-muted-foreground">{message}</p>
               <p className="mt-1 text-sm text-muted-foreground">Thank you for being part of Job Letter. You're always welcome back.</p>
               <Button variant="hero" className="mt-6 rounded-xl" onClick={handleSubscribeAgain}>Subscribe Again</Button>

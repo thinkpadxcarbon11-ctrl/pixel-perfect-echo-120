@@ -47,6 +47,8 @@ describe("Unsubscribe confirmation", () => {
     expect(screen.queryByRole("button", { name: "Subscribe Again" })).not.toBeInTheDocument();
     resolve({ success: true, status: "unsubscribed", message: "You have successfully unsubscribed from Job Letter!" });
     await screen.findByRole("button", { name: "Subscribe Again" });
+    expect(screen.getByRole("heading", { name: "You are successfully unsubscribed" })).toBeInTheDocument();
+    expect(screen.getByText("You have successfully unsubscribed from Job Letter!")).toBeInTheDocument();
   });
 
   it("preserves subscriber details and permits retry after failure", async () => {
