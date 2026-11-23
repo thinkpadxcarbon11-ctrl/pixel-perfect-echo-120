@@ -2,6 +2,8 @@
 
 Implement exactly the screenshot and nothing else
 
+it is a job letter project . i hope everyone will enjoy it. 
+
 This project was built with [Lovable](https://lovable.dev).
 
 **Live app**: https://pixel-perfect-echo-120.lovable.app
