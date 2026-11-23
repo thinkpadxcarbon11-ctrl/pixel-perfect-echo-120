@@ -2,7 +2,7 @@
 
 Implement exactly the screenshot and nothing else
 
-it is a job letter project . i hope everyone will enjoy it. 
+it is a job letter project . i hope everyone will enjoy it. <br>
 this project is made by lovable & n8n 
 
 
