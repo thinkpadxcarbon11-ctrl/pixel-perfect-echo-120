@@ -3,6 +3,8 @@
 Implement exactly the screenshot and nothing else
 
 it is a job letter project . i hope everyone will enjoy it. 
+this project is made by lovable & n8n 
+
 
 This project was built with [Lovable](https://lovable.dev).
 
